@@ -37,7 +37,5 @@ class AppApplicationTests {
         assertEquals("Los Angeles", args.getStartCity());
         assertEquals("New York", args.getEndCity());
         assertEquals("electric-car-large", args.getTransportationMethod());
-
     }
-
 }

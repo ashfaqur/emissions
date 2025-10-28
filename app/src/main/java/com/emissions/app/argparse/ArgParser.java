@@ -1,5 +1,9 @@
 package com.emissions.app.argparse;
 
+import com.emissions.app.constants.EmissionData;
+
+import java.util.Arrays;
+
 public class ArgParser {
 
     private static final String START_ARG = "--start";
@@ -56,6 +60,11 @@ public class ArgParser {
 
         if (transportionMethod == null){
             throw new IllegalArgumentException("Transportation method not specified.");
+        }
+
+        final String transport = transportionMethod;
+        if (Arrays.stream(EmissionData.values()).noneMatch(data -> data.getName().equals(transport))){
+            throw new IllegalArgumentException("Invalid transportation method given.");
         }
 
         return new Arguments(startCity, endCity, transportionMethod);
