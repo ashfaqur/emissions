@@ -22,7 +22,7 @@ public class AppApplication implements CommandLineRunner {
         Arguments arguments;
         try {
             arguments = argParser.parseArguments(args);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Error occurred parsing arguments. " + e.getMessage());
             return;
         }
@@ -31,7 +31,7 @@ public class AppApplication implements CommandLineRunner {
         String orsToken;
         try {
             orsToken = Environment.findOrsEnv();
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             System.out.println("Missing startup configuration. " + e.getMessage());
             return;
         }
