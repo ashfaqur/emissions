@@ -1,5 +1,7 @@
 package com.emissions.app;
 
+import com.emissions.app.argparse.ArgParser;
+import com.emissions.app.argparse.Arguments;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,12 +9,23 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AppApplication implements CommandLineRunner {
 
+    private ArgParser argParser = new ArgParser();
+
 	public static void main(String[] args) {
 		SpringApplication.run(AppApplication.class, args);
 	}
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Hello World");
+
+        Arguments arguments;
+        try {
+            arguments = argParser.parseArguments(args);
+        } catch (Exception e) {
+            System.out.println("Error occurred parsing arguments. " + e.getMessage());
+            return;
+        }
+        System.out.println(arguments);
+
     }
 }
