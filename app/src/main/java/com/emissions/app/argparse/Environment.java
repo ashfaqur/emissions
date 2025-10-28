@@ -7,7 +7,7 @@ public class Environment {
     public static String findOrsEnv(){
         String token = System.getenv(ORS_TOKEN);
         if (token == null || token.isBlank()){
-            throw new IllegalArgumentException("No ORS_TOKEN env variable specified.");
+            throw new IllegalArgumentException("No ORS_TOKEN environment variable specified.");
         }
         return token;
     }

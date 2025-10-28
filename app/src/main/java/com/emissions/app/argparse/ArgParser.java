@@ -3,6 +3,7 @@ package com.emissions.app.argparse;
 import com.emissions.app.constants.EmissionData;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class ArgParser {
 
@@ -15,6 +16,7 @@ public class ArgParser {
 
 
     public Arguments parseArguments(String... args) {
+        Objects.requireNonNull(args);
         if (args.length == 0) {
             throw new IllegalArgumentException("No arguments given");
         }
@@ -25,28 +27,21 @@ public class ArgParser {
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
-
             if (arg.equals(START_ARG) && (i+1 <  args.length)) {
                 startCity = args[i + 1];
                 i++;
-                continue;
             } else if (arg.startsWith(START_ARG_ALT) && (arg.length() > START_ARG_ALT.length())) {
                 startCity = arg.substring(START_ARG_ALT.length());
-                continue;
             } else if (arg.equals(END_ARG) && (i+1 <  args.length)) {
                 endCity = args[i + 1];
                 i++;
-                continue;
             } else if (arg.startsWith(END_ARG_ALT) && (arg.length() > END_ARG_ALT.length())) {
                 endCity = arg.substring(END_ARG_ALT.length());
-                continue;
             } else if (arg.equals(TRANSPORT_ARG) && (i+1 <  args.length)) {
                 transportionMethod = args[i + 1];
                 i++;
-                continue;
             } else if (arg.startsWith(TRANSPORT_ARG_ALT) && (arg.length() > TRANSPORT_ARG_ALT.length())) {
                 transportionMethod = arg.substring(TRANSPORT_ARG_ALT.length());
-                continue;
             }
         }
 
