@@ -1,0 +1,14 @@
+package com.emissions.app.argparse;
+
+public class Environment {
+
+    private static final String ORS_TOKEN = "ORS_TOKEN";
+
+    public static String findOrsEnv(){
+        String token = System.getenv(ORS_TOKEN);
+        if (token == null || token.isBlank()){
+            throw new IllegalArgumentException("No ORS_TOKEN env variable specified.");
+        }
+        return token;
+    }
+}
