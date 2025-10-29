@@ -28,6 +28,19 @@ Add the emissions data as enums. Use that to validate arg input.
 
 Read the token from the env var
 
+## ORS service
+
+Set up the core service for client calls to the ORS to get the data
+and the simple computation end to end.
+
+## First core logic draft
+
+Get the first very rough draft of the core logic working for initial test.
+Next to polish, remove test values and handle error conditions.
+
+
+
+
 
 
 

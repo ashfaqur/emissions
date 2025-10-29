@@ -4,6 +4,7 @@ import com.emissions.app.constants.EmissionData;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ArgParser {
 
@@ -58,11 +59,18 @@ public class ArgParser {
         }
 
         final String transport = transportionMethod;
+
+        Optional<EmissionData> emissionType =  Arrays.stream(EmissionData.values()).filter(data -> data.getName().equalsIgnoreCase(transport)).findFirst();
+        if (emissionType.isEmpty()){
+            throw new IllegalArgumentException("Invalid transportation method given.");
+        }
+        EmissionData transportEmissionType = emissionType.get();
+
         if (Arrays.stream(EmissionData.values()).noneMatch(data -> data.getName().equals(transport))){
             throw new IllegalArgumentException("Invalid transportation method given.");
         }
 
-        return new Arguments(startCity, endCity, transportionMethod);
+        return new Arguments(startCity, endCity, transportEmissionType);
     }
 
 
