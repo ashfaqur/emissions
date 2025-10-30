@@ -5,14 +5,12 @@ import com.emissions.app.argparse.Arguments;
 import com.emissions.app.argparse.Environment;
 import com.emissions.app.core.Emission;
 import com.emissions.app.help.Help;
-import com.emissions.app.service.OrsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.security.Provider;
 import java.util.Objects;
 
 @SpringBootApplication
@@ -32,14 +30,14 @@ public class AppApplication implements CommandLineRunner {
         this.help = new Help();
     }
 
-	public static void main(String[] args) {
-		SpringApplication.run(AppApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AppApplication.class, args);
+    }
 
     @Override
     public void run(String... args) throws Exception {
         Objects.requireNonNull(args);
-        if (this.help.showHelp(args)){
+        if (this.help.showHelp(args)) {
             this.help.displayHelp();
             return;
         }

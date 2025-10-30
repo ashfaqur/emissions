@@ -1,20 +1,20 @@
 package com.emissions.app.help;
 
-import com.emissions.app.AppApplication;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class Help {
-    private final Logger log = LogManager.getLogger(Help.class);
     private static final String HELP_ARG = "--help";
     private static final String HELP_ARG_ALT = "-h";
+    private final Logger log = LogManager.getLogger(Help.class);
 
     /**
      * Checks for conditions for displaying help text
+     *
      * @param args given arguments
      * @return boolean TRUE to show, FALSE otherwise
      */
-    public boolean showHelp(String ...args){
+    public boolean showHelp(String... args) {
         return (args.length == 0
                 || args[0].equalsIgnoreCase(HELP_ARG)
                 || args[0].equalsIgnoreCase(HELP_ARG_ALT));
@@ -23,7 +23,7 @@ public class Help {
     /**
      * Displays the help text on the console
      */
-    public void displayHelp(){
+    public void displayHelp() {
         String helpText = "\nCompute CO2 emission when travelling between two cities."
                 + "\nOptions:"
                 + "\n  --start  Start city name"
