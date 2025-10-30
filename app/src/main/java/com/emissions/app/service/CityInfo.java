@@ -1,5 +1,7 @@
 package com.emissions.app.service;
 
+import java.util.List;
+
 public record CityInfo(String cityName, double cityLatitude, double cityLongitude) {
 
     @Override
