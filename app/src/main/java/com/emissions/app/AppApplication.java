@@ -59,7 +59,10 @@ public class AppApplication implements CommandLineRunner {
         }
         log.debug("Using ORS API token: {}", orsToken);
 
-        this.emission.calculateEmission(orsToken, arguments.getStartCity(),
-                arguments.getEndCity(), arguments.getTransportationEmission());
+        double totalEmission = this.emission.calculateEmission(
+                orsToken, arguments.getStartCity(), arguments.getEndCity(),
+                arguments.getTransportationEmission());
+
+        log.info("Your trip caused {}kg of CO2-equivalent.", String.format("%.1f", totalEmission));
     }
 }

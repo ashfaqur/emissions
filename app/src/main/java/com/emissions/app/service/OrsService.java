@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -17,77 +18,55 @@ public class OrsService {
 
     private static final String ORS_BASE_URL = "https://api.openrouteservice.org";
 
-    private final RestClient restClient;
+    private final OrsRestClient restClient;
 
-    public OrsService() {
-        this.restClient = RestClient.builder().baseUrl(ORS_BASE_URL).build();
+    public OrsService(OrsRestClient restClient) {
+        this.restClient = restClient;
     }
 
-    public CityInfo requestCityLocation(String key, String city) {
+    public CityData requestCityLocation2(String key, String city) {
+        GeocodeResponse getcodeResponse = this.restClient.requestCityLocation(key, city);
+        return extractCityData(city, getcodeResponse);
+    }
 
-        String response = this.restClient.get().uri(buildGeocodeRequestUri(key, city)).retrieve().body(String.class);
-
-        System.out.println(response);
-
-        // TODO: Use DTO and error handling
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = null;
-        try {
-            node = mapper.readTree(response);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+    private CityData extractCityData(String city, GeocodeResponse response) {
+        if (response == null){
+            throw new NoSuchElementException("No city " + city + " found");
         }
-
-        String cityName = node.get("features").get(0).get("properties").get("name").asText();
-        double longitude = node.get("features").get(0).get("geometry").get("coordinates").get(0).asDouble();
-        double latitude = node.get("features").get(0).get("geometry").get("coordinates").get(1).asDouble();
-
-        return new CityInfo(cityName, latitude, longitude);
-    }
-
-
-    public double requestDistance(CityInfo start, CityInfo end, String key) {
-        // FIXME: use actual city info
-        String response = this.restClient.post().uri(buildDistanceRequestUri())
-                .contentType(APPLICATION_JSON)
-                .body("{\"locations\":[[-118.25703,34.05513],[-73.9708,40.68295]],\"metrics\":[\"distance\"]}")
-                .header("Authorization", key)
-                .retrieve()
-                .body(String.class);
-        // TODO: Use DTO and error handling
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = null;
-        try {
-            node = mapper.readTree(response);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        List<GeocodeResponse.Feature> features = response.features();
+        if (features == null ||  features.isEmpty()){
+            throw new NoSuchElementException("No city " + city + " found");
         }
-
-        double distance = node.get("distances").get(0).get(1).asDouble();
-        System.out.println("Distance: " + response);
-        return distance;
+        GeocodeResponse.Geometry geometry =  features.getFirst().geometry();
+        if (geometry == null){
+            throw new NoSuchElementException("Unable to find coordinates");
+        }
+        List<Double> coordinates = geometry.coordinates();
+        if (coordinates == null || coordinates.isEmpty()){
+            throw new NoSuchElementException("Unable to find coordinates");
+        }
+        //TODO: would be better to extract the city name from the response
+        return new CityData(city, coordinates);
     }
 
-    private Function<UriBuilder, URI> buildGeocodeRequestUri(String key, String city) {
-        return uriBuilder -> {
-            URI uri = uriBuilder
-                    .path("/geocode/search")
-                    .queryParam("api_key", key)
-                    .queryParam("text", city)
-                    .queryParam("layers", "locality")
-                    .build();
-
-            System.out.println("gecode url= " + uri);
-            return uri;
-        };
-    }
-
-    private Function<UriBuilder, URI> buildDistanceRequestUri() {
-        return uriBuilder -> {
-            URI uri = uriBuilder
-                    .path("v2/matrix/driving-car")
-                    .build();
-            return uri;
-        };
+    public double requestDistance(String key, CityData startCity, CityData endCity){
+        DistanceResponse response =  this.restClient.requestDistance(key, startCity.coordinates(), endCity.coordinates());
+        if (response == null){
+            throw new NoSuchElementException("Unable to get distance response from ORS");
+        }
+        List<List<Double>> distanceMatrix =  response.distances();
+        if (distanceMatrix.isEmpty()){
+            throw new NoSuchElementException("Unable to get distance information between cities");
+        }
+        List<Double> distances = distanceMatrix.getFirst();
+        if (distanceMatrix.isEmpty()){
+            throw new NoSuchElementException("Unable to get distance information between cities");
+        }
+        for (Double distance : distances){
+            if (distance > 0){
+                return distance;
+            }
+        }
+        throw new NoSuchElementException("No distance information found");
     }
 }
