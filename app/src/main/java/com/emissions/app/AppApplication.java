@@ -4,22 +4,32 @@ import com.emissions.app.argparse.ArgParser;
 import com.emissions.app.argparse.Arguments;
 import com.emissions.app.argparse.Environment;
 import com.emissions.app.core.Emission;
+import com.emissions.app.help.Help;
 import com.emissions.app.service.OrsService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.security.Provider;
+import java.util.Objects;
 
 @SpringBootApplication
 public class AppApplication implements CommandLineRunner {
 
-    private ArgParser argParser = new ArgParser();
+    private final Logger log = LogManager.getLogger(AppApplication.class);
 
+    private final ArgParser argParser;
     private final Emission emission;
+    private final Environment environment;
+    private final Help help;
 
     public AppApplication(Emission emissionComputation) {
         this.emission = emissionComputation;
+        this.argParser = new ArgParser();
+        this.environment = new Environment();
+        this.help = new Help();
     }
 
 	public static void main(String[] args) {
@@ -28,25 +38,30 @@ public class AppApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        Objects.requireNonNull(args);
+        if (this.help.showHelp(args)){
+            this.help.displayHelp();
+            return;
+        }
         Arguments arguments;
         try {
             arguments = argParser.parseArguments(args);
         } catch (IllegalArgumentException e) {
-            System.out.println("Error occurred parsing arguments. " + e.getMessage());
+            log.error("Error occurred parsing arguments. {}", e.getMessage(), e);
             return;
         }
-        System.out.println(arguments);
+        log.debug(arguments);
 
         String orsToken;
         try {
-            orsToken = Environment.findOrsToken();
+            orsToken = this.environment.findOrsToken();
         } catch (IllegalArgumentException e) {
-            System.out.println("Missing startup configuration. " + e.getMessage());
+            log.error("Missing startup configuration. {}", e.getMessage(), e);
             return;
         }
-        System.out.println("Using ORS API token: " + orsToken);
+        log.debug("Using ORS API token: {}", orsToken);
 
-        this.emission.calculateEmission(orsToken, arguments);
+        this.emission.calculateEmission(orsToken, arguments.getStartCity(),
+                arguments.getEndCity(), arguments.getTransportationEmission());
     }
 }
