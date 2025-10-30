@@ -17,6 +17,7 @@ public class ArgParser {
 
     /**
      * Parse the given command line arguments
+     *
      * @param args arguments
      * @return Arguments Object where given arguments has been processed and sanitized
      */
@@ -31,35 +32,35 @@ public class ArgParser {
 
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
-            if (arg.equals(START_ARG) && (i+1 <  args.length)) {
+            if (arg.equals(START_ARG) && (i + 1 < args.length)) {
                 startCity = args[i + 1];
                 i++;
             } else if (arg.startsWith(START_ARG_ALT) && (arg.length() > START_ARG_ALT.length())) {
                 startCity = arg.substring(START_ARG_ALT.length());
-            } else if (arg.equals(END_ARG) && (i+1 <  args.length)) {
+            } else if (arg.equals(END_ARG) && (i + 1 < args.length)) {
                 endCity = args[i + 1];
                 i++;
             } else if (arg.startsWith(END_ARG_ALT) && (arg.length() > END_ARG_ALT.length())) {
                 endCity = arg.substring(END_ARG_ALT.length());
-            } else if (arg.equals(TRANSPORT_ARG) && (i+1 <  args.length)) {
+            } else if (arg.equals(TRANSPORT_ARG) && (i + 1 < args.length)) {
                 transportionMethod = args[i + 1];
                 i++;
             } else if (arg.startsWith(TRANSPORT_ARG_ALT) && (arg.length() > TRANSPORT_ARG_ALT.length())) {
                 transportionMethod = arg.substring(TRANSPORT_ARG_ALT.length());
             }
         }
-        if (startCity == null){
+        if (startCity == null) {
             throw new IllegalArgumentException("Start city not specified.");
         }
-        if (endCity == null){
+        if (endCity == null) {
             throw new IllegalArgumentException("End city not specified.");
         }
-        if (transportionMethod == null){
+        if (transportionMethod == null) {
             throw new IllegalArgumentException("Transportation method not specified.");
         }
         final String transport = transportionMethod;
-        Optional<EmissionData> emissionType =  Arrays.stream(EmissionData.values()).filter(data -> data.getName().equalsIgnoreCase(transport)).findFirst();
-        if (emissionType.isEmpty()){
+        Optional<EmissionData> emissionType = Arrays.stream(EmissionData.values()).filter(data -> data.getName().equalsIgnoreCase(transport)).findFirst();
+        if (emissionType.isEmpty()) {
             throw new IllegalArgumentException("Invalid transportation method given.");
         }
         EmissionData transportEmissionType = emissionType.get();

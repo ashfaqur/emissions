@@ -1,7 +1,5 @@
 package com.emissions.app.service;
 
-import java.util.function.Function;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +8,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
 
 import java.net.URI;
+import java.util.function.Function;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -20,11 +19,11 @@ public class OrsService {
 
     private final RestClient restClient;
 
-    public OrsService(){
+    public OrsService() {
         this.restClient = RestClient.builder().baseUrl(ORS_BASE_URL).build();
     }
 
-    public CityInfo requestCityLocation(String key, String city){
+    public CityInfo requestCityLocation(String key, String city) {
 
         String response = this.restClient.get().uri(buildGeocodeRequestUri(key, city)).retrieve().body(String.class);
 
@@ -47,7 +46,7 @@ public class OrsService {
     }
 
 
-    public double requestDistance(CityInfo start, CityInfo end, String key){
+    public double requestDistance(CityInfo start, CityInfo end, String key) {
         // FIXME: use actual city info
         String response = this.restClient.post().uri(buildDistanceRequestUri())
                 .contentType(APPLICATION_JSON)
@@ -66,7 +65,7 @@ public class OrsService {
 
         double distance = node.get("distances").get(0).get(1).asDouble();
         System.out.println("Distance: " + response);
-        return  distance;
+        return distance;
     }
 
     private Function<UriBuilder, URI> buildGeocodeRequestUri(String key, String city) {

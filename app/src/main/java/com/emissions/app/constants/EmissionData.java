@@ -20,7 +20,8 @@ public enum EmissionData {
 
     private final String name;
     private final int emission;
-    EmissionData(String name, int emission){
+
+    EmissionData(String name, int emission) {
         this.name = name;
         this.emission = emission;
     }
