@@ -15,13 +15,16 @@ public class ArgParser {
     private static final String TRANSPORT_ARG = "--transportation-method";
     private static final String TRANSPORT_ARG_ALT = "--transportation-method=";
 
-
+    /**
+     * Parse the given command line arguments
+     * @param args arguments
+     * @return Arguments Object where given arguments has been processed and sanitized
+     */
     public Arguments parseArguments(String... args) {
         Objects.requireNonNull(args);
         if (args.length == 0) {
             throw new IllegalArgumentException("No arguments given");
         }
-
         String startCity = null;
         String endCity = null;
         String transportionMethod = null;
@@ -45,33 +48,21 @@ public class ArgParser {
                 transportionMethod = arg.substring(TRANSPORT_ARG_ALT.length());
             }
         }
-
         if (startCity == null){
             throw new IllegalArgumentException("Start city not specified.");
         }
-
         if (endCity == null){
             throw new IllegalArgumentException("End city not specified.");
         }
-
         if (transportionMethod == null){
             throw new IllegalArgumentException("Transportation method not specified.");
         }
-
         final String transport = transportionMethod;
-
         Optional<EmissionData> emissionType =  Arrays.stream(EmissionData.values()).filter(data -> data.getName().equalsIgnoreCase(transport)).findFirst();
         if (emissionType.isEmpty()){
             throw new IllegalArgumentException("Invalid transportation method given.");
         }
         EmissionData transportEmissionType = emissionType.get();
-
-        if (Arrays.stream(EmissionData.values()).noneMatch(data -> data.getName().equals(transport))){
-            throw new IllegalArgumentException("Invalid transportation method given.");
-        }
-
         return new Arguments(startCity, endCity, transportEmissionType);
     }
-
-
 }

@@ -33,6 +33,10 @@ Read the token from the env var
 Set up the core service for client calls to the ORS to get the data
 and the simple computation end to end.
 
+## PostMan
+
+Use postman for testing the rest client calls
+
 ## First core logic draft
 
 Get the first very rough draft of the core logic working for initial test.

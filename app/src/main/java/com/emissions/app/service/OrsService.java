@@ -16,12 +16,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @Service
 public class OrsService {
 
-    private static final String BASE_URL = "https://api.openrouteservice.org";
+    private static final String ORS_BASE_URL = "https://api.openrouteservice.org";
 
     private final RestClient restClient;
 
     public OrsService(){
-        this.restClient = RestClient.builder().baseUrl(BASE_URL).build();
+        this.restClient = RestClient.builder().baseUrl(ORS_BASE_URL).build();
     }
 
     public CityInfo requestCityLocation(String key, String city){

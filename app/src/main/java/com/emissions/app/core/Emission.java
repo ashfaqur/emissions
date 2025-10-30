@@ -6,6 +6,8 @@ import com.emissions.app.service.CityInfo;
 import com.emissions.app.service.OrsService;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class Emission {
 
@@ -15,21 +17,26 @@ public class Emission {
         this.service = orsService;
     }
 
+    /**
+     * Calculates the total emission given the cities and
+     * @param apiKey ORS API Key
+     * @param startCity Name of start city
+     * @param endCity Name of end city
+     * @param transportEmissionType Transport emission type
+     */
+    public void calculateEmission(String apiKey, String startCity, String endCity,
+                                  EmissionData transportEmissionType){
 
-    public void calculateEmission(String apiKey, Arguments args){
-        String startCity = args.getStartCity();
         CityInfo startCityInfo = this.service.requestCityLocation(apiKey, startCity);
         System.out.println(startCityInfo);
 
-        String endCity = args.getEndCity();
         CityInfo endCityInfo = this.service.requestCityLocation(apiKey, endCity);
         System.out.println(endCityInfo);
 
         double distance = this.service.requestDistance(startCityInfo, endCityInfo, apiKey);
         System.out.println("Distance: " + distance);
 
-        EmissionData transportType = args.getTransportationEmission();
-        int transportEmission = transportType.getEmission();
+        int transportEmission = transportEmissionType.getEmission();
 
         double totalEmission = (transportEmission * distance) / 1000000;
         System.out.println("Total emission (kg): " + totalEmission);
