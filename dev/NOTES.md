@@ -42,6 +42,20 @@ Use postman for testing the rest client calls
 Get the first very rough draft of the core logic working for initial test.
 Next to polish, remove test values and handle error conditions.
 
+## Rest client
+
+https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-restclient
+
+## DTO example
+
+https://medium.com/@mariorodrguezgalicia/what-is-a-dto-in-spring-boot-and-why-should-you-use-it-97651506e516
+
+## Uri builder
+
+Should help with testing the url
+
+https://www.baeldung.com/spring-uricomponentsbuilder
+
 
 
 

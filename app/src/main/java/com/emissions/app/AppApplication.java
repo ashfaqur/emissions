@@ -59,10 +59,16 @@ public class AppApplication implements CommandLineRunner {
         }
         log.debug("Using ORS API token: {}", orsToken);
 
-        double totalEmission = this.emission.calculateEmission(
-                orsToken, arguments.getStartCity(), arguments.getEndCity(),
-                arguments.getTransportationEmission());
+        double totalEmission;
 
+        try {
+            totalEmission = this.emission.calculateEmission(
+                    orsToken, arguments.getStartCity(), arguments.getEndCity(),
+                    arguments.getTransportationEmission());
+        } catch (Exception e){
+            log.error("Error occurred computing the emission. {}", e.getMessage());
+            throw e;
+        }
         log.info("Your trip caused {}kg of CO2-equivalent.", String.format("%.1f", totalEmission));
     }
 }

@@ -1,17 +1,9 @@
 package com.emissions.app.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 @Service
 public class OrsService {
@@ -24,7 +16,7 @@ public class OrsService {
         this.restClient = restClient;
     }
 
-    public CityData requestCityLocation2(String key, String city) {
+    public CityData requestCityLocation(String key, String city) {
         GeocodeResponse getcodeResponse = this.restClient.requestCityLocation(key, city);
         return extractCityData(city, getcodeResponse);
     }
@@ -50,7 +42,8 @@ public class OrsService {
     }
 
     public double requestDistance(String key, CityData startCity, CityData endCity){
-        DistanceResponse response =  this.restClient.requestDistance(key, startCity.coordinates(), endCity.coordinates());
+        DistanceResponse response =  this.restClient.requestDistance(
+                key, startCity.coordinates(), endCity.coordinates());
         if (response == null){
             throw new NoSuchElementException("Unable to get distance response from ORS");
         }

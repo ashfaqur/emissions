@@ -1,9 +1,14 @@
 package com.emissions.app.service;
 
+import com.emissions.app.AppApplication;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriBuilder;
+import org.springframework.web.util.UriBuilderFactory;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -18,6 +23,8 @@ public class OrsRestClient {
 
     private static final String ORS_BASE_URL = "https://api.openrouteservice.org";
 
+    private final Logger log = LogManager.getLogger(AppApplication.class);
+
     private final RestClient restClient;
 
     public OrsRestClient() {
@@ -29,27 +36,32 @@ public class OrsRestClient {
     }
 
     public GeocodeResponse requestCityLocation(String key, String city) {
+        URI uri = buildGeocodeRequestFullUri(key, city);
+        log.debug("City Location Request URI: {}", uri);
         return this.restClient.get()
-                .uri(buildGeocodeRequestUri(key, city))
+                .uri(uri)
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, errorStatusHandler())
                 .body(GeocodeResponse.class);
     }
 
-    private Function<UriBuilder, URI> buildGeocodeRequestUri(String key, String city) {
-        return uriBuilder -> uriBuilder
+    private URI buildGeocodeRequestFullUri(String key, String city){
+        return UriComponentsBuilder.fromUriString(ORS_BASE_URL)
                 .path("/geocode/search")
                 .queryParam("api_key", key)
                 .queryParam("text", city)
                 .queryParam("layers", "locality")
-                .build();
+                .build()
+                .toUri();
     }
 
     public DistanceResponse requestDistance(String key, List<Double> startCityLocation, List<Double> endCityLocation) {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("locations", List.of(startCityLocation, endCityLocation));
         requestBody.put("metrics", List.of("distance"));
-        return this.restClient.post().uri(buildDistanceRequestUri())
+        URI uri = buildDistanceRequestFullUri();
+        log.debug("Distance Request URI: {}", uri);
+        return this.restClient.post().uri(uri)
                 .contentType(APPLICATION_JSON)
                 .body(requestBody)
                 .header("Authorization", key)
@@ -58,16 +70,17 @@ public class OrsRestClient {
                 .body(DistanceResponse.class);
     }
 
-    private Function<UriBuilder, URI> buildDistanceRequestUri() {
-        return uriBuilder -> uriBuilder
-                    .path("v2/matrix/driving-car")
-                    .build();
+    private URI buildDistanceRequestFullUri(){
+        return UriComponentsBuilder.fromUriString(ORS_BASE_URL)
+                .path("v2/matrix/driving-car")
+                .build()
+                .toUri();
     }
 
     private RestClient.ResponseSpec.ErrorHandler errorStatusHandler(){
         return (request, response) -> {
             throw new IllegalArgumentException(
-                    "Invalid request to Open Route Service. Check API key. Details: "
+                    "Invalid request to Open Route Service. Check API key. "
                             + response.getStatusCode());
         };
     }
