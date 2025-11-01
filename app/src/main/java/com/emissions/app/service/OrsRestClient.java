@@ -34,7 +34,7 @@ public class OrsRestClient {
 
     public GeocodeResponse requestCityLocation(String key, String city) {
         URI uri = buildGeocodeRequestFullUri(key, city);
-        log.debug("City Location Request URI: {}", uri);
+        log.debug("City Location Request URI:\n{}", uri);
         return this.restClient.get()
                 .uri(uri)
                 .retrieve()
@@ -57,7 +57,7 @@ public class OrsRestClient {
         requestBody.put("locations", List.of(startCityLocation, endCityLocation));
         requestBody.put("metrics", List.of("distance"));
         URI uri = buildDistanceRequestFullUri();
-        log.debug("Distance Request URI: {}", uri);
+        log.debug("Distance Request URI:\n{}", uri);
         return this.restClient.post().uri(uri)
                 .contentType(APPLICATION_JSON)
                 .body(requestBody)

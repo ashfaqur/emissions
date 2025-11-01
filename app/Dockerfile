@@ -1,4 +1,4 @@
-# Build and test stage
+# Build stage
 FROM alpine/java:21-jdk AS build
 WORKDIR /app
 # Copy all required files

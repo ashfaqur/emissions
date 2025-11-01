@@ -20,11 +20,11 @@ Navigate to the app folder and install the app with the following command
 
 Unix:
 
-    ./mvnw clean package -DskipTests
+    ./mvnw clean package
 
 Windows:
 
-    mvnw.cmd  clean package -DskipTests
+    mvnw.cmd  clean package
 
 ## Open Route Service API Key
 
@@ -72,6 +72,10 @@ Where the transportation-method can be one of the following:
     electric-car-large
     bus-default
     train-default
+
+To enable debug log:
+
+    --logging.level.com.emissions.app=DEBUG
 
 Example command:
 

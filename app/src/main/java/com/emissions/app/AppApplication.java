@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.logging.LogLevel;
+import org.springframework.boot.logging.LoggingSystem;
+import org.springframework.boot.logging.logback.RootLogLevelConfigurator;
 
 import java.util.Objects;
 
@@ -22,12 +25,16 @@ public class AppApplication implements CommandLineRunner {
     private final Emission emission;
     private final Environment environment;
     private final Help help;
+    private final LoggingSystem loggingSystem;
 
-    public AppApplication(Emission emissionComputation) {
+
+    public AppApplication(Emission emissionComputation,
+                          LoggingSystem loggingSystem) {
         this.emission = emissionComputation;
         this.argParser = new ArgParser();
         this.environment = new Environment();
         this.help = new Help();
+        this.loggingSystem = loggingSystem;
     }
 
     public static void main(String[] args) {
@@ -45,19 +52,19 @@ public class AppApplication implements CommandLineRunner {
         try {
             arguments = argParser.parseArguments(args);
         } catch (IllegalArgumentException e) {
-            log.error("Error occurred parsing arguments. {}", e.getMessage(), e);
+            errorLogger("Error occurred parsing arguments.", e);
             return;
         }
-        log.debug(arguments);
+        this.log.debug(arguments);
 
         String orsToken;
         try {
             orsToken = this.environment.findOrsToken();
         } catch (IllegalArgumentException e) {
-            log.error("Missing startup configuration. {}", e.getMessage(), e);
+            errorLogger("Missing startup configuration.", e);
             return;
         }
-        log.debug("Using ORS API token: {}", orsToken);
+        this.log.debug("Using ORS API token: {}", orsToken);
 
         double totalEmission;
 
@@ -66,9 +73,23 @@ public class AppApplication implements CommandLineRunner {
                     orsToken, arguments.getStartCity(), arguments.getEndCity(),
                     arguments.getTransportationEmission());
         } catch (Exception e){
-            log.error("Error occurred computing the emission. {}", e.getMessage());
+            errorLogger("Error occurred computing the emission.", e);
+            return;
+        }
+        this.log.info("Your trip caused {}kg of CO2-equivalent.", String.format("%.1f", totalEmission));
+    }
+
+    /**
+     * Log the error but print the stack trace only when debug log level is set
+     * @param msg Custom message
+     * @param e Original error
+     * @throws Exception Throws exception only in debug mode
+     */
+    public void errorLogger(String msg, Exception e) throws Exception {
+        this.log.error("{} {}",msg, e.getMessage());
+        if (this.log.isDebugEnabled()) {
+            this.log.debug("Stack trace:", e);
             throw e;
         }
-        log.info("Your trip caused {}kg of CO2-equivalent.", String.format("%.1f", totalEmission));
     }
 }
