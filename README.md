@@ -24,7 +24,7 @@ Unix:
 
 Windows:
 
-    mvnw.cmd  clean package
+    mvnw.cmd clean package
 
 ## Open Route Service API Key
 
