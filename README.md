@@ -94,15 +94,36 @@ Windows:
     mvnw.cmd test
 
 
+To enable debug log:
+
+    --logging.level.com.emissions.app=DEBUG
+
+Example unix command:
+
+    java -jar target/emissions-calculator.jar --start "Munich" --end="Berlin" --transportation-method=diesel-car-medium
+
+## Run unit tests
+
+Command to run the unit tests
+
+Unix:
+
+    ./mvnw test
+
+Windows:
+
+    mvnw.cmd test
+
+
 ## Docker
 
-The app can be build and run insider a docker container.
+The app can be built and run insider a docker container.
 
 Install docker
 
-    https://docs.docker.com/engine/install/
+https://docs.docker.com/engine/install/
 
-Build the docker image from the app directory
+Build the docker image from the `/app` directory
 
     sudo docker build -t emissions-calculator:latest .
 
