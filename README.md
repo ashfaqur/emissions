@@ -48,7 +48,7 @@ Windows:
 
 Invoke help to see the commands available
 
-    java -jar target/app-0.0.1-SNAPSHOT.jar --help
+    java -jar target/emissions-calculator.jar --help
 
     Compute CO2 emission when travelling between two cities.
         Options:
@@ -73,4 +73,45 @@ Where the transportation-method can be one of the following:
     bus-default
     train-default
 
+To enable debug log:
+
+    --logging.level.com.emissions.app=DEBUG
+
+Example command:
+
+    java -jar target/emissions-calculator.jar --start "Munich" --end="Berlin" --transportation-method=diesel-car-medium
+
+## Run unit tests
+
+Command to run the unit tests
+
+Unix:
+
+    ./mvnw test
+
+Windows:
+
+    mvnw.cmd test
+
+
 ## Docker
+
+The app can be build and run insider a docker container.
+
+Install docker
+
+    https://docs.docker.com/engine/install/
+
+Build the docker image from the app directory
+
+    sudo docker build -t emissions-calculator:latest .
+
+Run the docker with the key and the required command options
+
+    sudo docker run -e ORS_TOKEN=<key> -t emissions-calculator:latest --start <city1> --end <city2> --transportation-method <transport>
+
+Example command:
+
+    sudo docker run -e ORS_TOKEN=<key> -t emissions-calculator:latest --start Munich --end Berlin --transportation-method diesel-car-medium
+
+

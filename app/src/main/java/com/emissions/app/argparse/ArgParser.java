@@ -1,6 +1,7 @@
 package com.emissions.app.argparse;
 
 import com.emissions.app.constants.EmissionData;
+import org.springframework.boot.logging.LogLevel;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -59,7 +60,8 @@ public class ArgParser {
             throw new IllegalArgumentException("Transportation method not specified.");
         }
         final String transport = transportionMethod;
-        Optional<EmissionData> emissionType = Arrays.stream(EmissionData.values()).filter(data -> data.getName().equalsIgnoreCase(transport)).findFirst();
+        Optional<EmissionData> emissionType = Arrays.stream(EmissionData.values()).filter(
+                data -> data.getName().equalsIgnoreCase(transport)).findFirst();
         if (emissionType.isEmpty()) {
             throw new IllegalArgumentException("Invalid transportation method given.");
         }
