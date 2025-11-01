@@ -1,13 +1,10 @@
 package com.emissions.app.service;
 
-import com.emissions.app.AppApplication;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriBuilderFactory;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -23,7 +20,7 @@ public class OrsRestClient {
 
     private static final String ORS_BASE_URL = "https://api.openrouteservice.org";
 
-    private final Logger log = LogManager.getLogger(AppApplication.class);
+    private final Logger log = LogManager.getLogger(OrsRestClient.class);
 
     private final RestClient restClient;
 
@@ -45,7 +42,7 @@ public class OrsRestClient {
                 .body(GeocodeResponse.class);
     }
 
-    private URI buildGeocodeRequestFullUri(String key, String city){
+    public URI buildGeocodeRequestFullUri(String key, String city){
         return UriComponentsBuilder.fromUriString(ORS_BASE_URL)
                 .path("/geocode/search")
                 .queryParam("api_key", key)
@@ -70,7 +67,7 @@ public class OrsRestClient {
                 .body(DistanceResponse.class);
     }
 
-    private URI buildDistanceRequestFullUri(){
+    public URI buildDistanceRequestFullUri(){
         return UriComponentsBuilder.fromUriString(ORS_BASE_URL)
                 .path("v2/matrix/driving-car")
                 .build()
