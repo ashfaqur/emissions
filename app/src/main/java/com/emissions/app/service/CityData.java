@@ -11,4 +11,4 @@ public record CityData(String name, List<Double> coordinates) {
                 ", coordinates=" + coordinates +
                 '}';
     }
-};
+}

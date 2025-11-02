@@ -11,7 +11,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -42,7 +41,7 @@ public class OrsRestClient {
                 .body(GeocodeResponse.class);
     }
 
-    public URI buildGeocodeRequestFullUri(String key, String city){
+    public URI buildGeocodeRequestFullUri(String key, String city) {
         return UriComponentsBuilder.fromUriString(ORS_BASE_URL)
                 .path("/geocode/search")
                 .queryParam("api_key", key)
@@ -67,14 +66,14 @@ public class OrsRestClient {
                 .body(DistanceResponse.class);
     }
 
-    public URI buildDistanceRequestFullUri(){
+    public URI buildDistanceRequestFullUri() {
         return UriComponentsBuilder.fromUriString(ORS_BASE_URL)
                 .path("v2/matrix/driving-car")
                 .build()
                 .toUri();
     }
 
-    private RestClient.ResponseSpec.ErrorHandler errorStatusHandler(){
+    private RestClient.ResponseSpec.ErrorHandler errorStatusHandler() {
         return (request, response) -> {
             throw new IllegalArgumentException(
                     "Invalid request to Open Route Service. Check API key. "

@@ -1,7 +1,6 @@
 package com.emissions.app.argparse;
 
 import com.emissions.app.constants.EmissionData;
-import org.springframework.boot.logging.LogLevel;
 
 public class Arguments {
 
