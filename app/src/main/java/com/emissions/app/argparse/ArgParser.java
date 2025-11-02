@@ -1,6 +1,9 @@
 package com.emissions.app.argparse;
 
 import com.emissions.app.constants.EmissionData;
+import com.emissions.app.core.Emission;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -9,6 +12,8 @@ import java.util.Optional;
 
 @Component
 public class ArgParser {
+
+    private final Logger log = LogManager.getLogger(ArgParser.class);
 
     private static final String START_ARG = "--start";
     private static final String START_ARG_ALT = "--start=";
@@ -64,6 +69,13 @@ public class ArgParser {
         Optional<EmissionData> emissionType = Arrays.stream(EmissionData.values()).filter(
                 data -> data.getName().equalsIgnoreCase(transport)).findFirst();
         if (emissionType.isEmpty()) {
+            StringBuilder stringBuilder = new StringBuilder(
+                    "Provide a valid transportation method from following items:");
+            for (EmissionData emission : EmissionData.values()){
+                stringBuilder.append("\n");
+                stringBuilder.append(emission.getName());
+            }
+            this.log.info(stringBuilder.toString());
             throw new IllegalArgumentException("Invalid transportation method given.");
         }
         EmissionData transportEmissionType = emissionType.get();
