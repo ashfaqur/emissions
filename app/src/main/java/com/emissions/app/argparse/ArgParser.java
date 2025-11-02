@@ -1,7 +1,7 @@
 package com.emissions.app.argparse;
 
 import com.emissions.app.constants.EmissionData;
-import org.springframework.boot.logging.LogLevel;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Objects;
