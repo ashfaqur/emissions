@@ -2,7 +2,9 @@ package com.emissions.app.help;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Help {
     private static final String HELP_ARG = "--help";
     private static final String HELP_ARG_ALT = "-h";

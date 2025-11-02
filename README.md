@@ -46,7 +46,7 @@ Windows:
 
 ## Commands
 
-Invoke help to see the commands available
+Invoke help to see the options available
 
     java -jar target/emissions-calculator.jar --help
 

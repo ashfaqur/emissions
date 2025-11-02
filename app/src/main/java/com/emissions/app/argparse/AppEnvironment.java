@@ -1,6 +1,9 @@
 package com.emissions.app.argparse;
 
-public class Environment {
+import org.springframework.stereotype.Component;
+
+@Component
+public class AppEnvironment {
 
     private static final String ORS_TOKEN = "ORS_TOKEN";
 

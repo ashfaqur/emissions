@@ -22,41 +22,41 @@ public class OrsService {
     }
 
     private CityData extractCityData(String city, GeocodeResponse response) {
-        if (response == null){
+        if (response == null) {
             throw new NoSuchElementException("No city " + city + " found");
         }
         List<GeocodeResponse.Feature> features = response.features();
-        if (features == null ||  features.isEmpty()){
+        if (features == null || features.isEmpty()) {
             throw new NoSuchElementException("No city " + city + " found");
         }
-        GeocodeResponse.Geometry geometry =  features.getFirst().geometry();
-        if (geometry == null){
+        GeocodeResponse.Geometry geometry = features.getFirst().geometry();
+        if (geometry == null) {
             throw new NoSuchElementException("Unable to find coordinates");
         }
         List<Double> coordinates = geometry.coordinates();
-        if (coordinates == null || coordinates.isEmpty()){
+        if (coordinates == null || coordinates.isEmpty()) {
             throw new NoSuchElementException("Unable to find coordinates");
         }
         //TODO: would be better to extract the city name from the response
         return new CityData(city, coordinates);
     }
 
-    public double requestDistance(String key, CityData startCity, CityData endCity){
-        DistanceResponse response =  this.restClient.requestDistance(
+    public double requestDistance(String key, CityData startCity, CityData endCity) {
+        DistanceResponse response = this.restClient.requestDistance(
                 key, startCity.coordinates(), endCity.coordinates());
-        if (response == null){
+        if (response == null) {
             throw new NoSuchElementException("Unable to get distance response from ORS");
         }
-        List<List<Double>> distanceMatrix =  response.distances();
-        if (distanceMatrix.isEmpty()){
+        List<List<Double>> distanceMatrix = response.distances();
+        if (distanceMatrix.isEmpty()) {
             throw new NoSuchElementException("Unable to get distance information between cities");
         }
         List<Double> distances = distanceMatrix.getFirst();
-        if (distanceMatrix.isEmpty()){
+        if (distanceMatrix.isEmpty()) {
             throw new NoSuchElementException("Unable to get distance information between cities");
         }
-        for (Double distance : distances){
-            if (distance > 0){
+        for (Double distance : distances) {
+            if (distance > 0) {
                 return distance;
             }
         }

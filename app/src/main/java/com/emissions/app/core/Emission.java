@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class Emission {
 
-    private final Logger log = LogManager.getLogger(Emission.class);
-
     public final OrsService service;
+    private final Logger log = LogManager.getLogger(Emission.class);
 
     public Emission(OrsService orsService) {
         this.service = orsService;
@@ -21,20 +20,19 @@ public class Emission {
     /**
      * Calculates the total emission between cities with given transportation type
      *
-     * @param apiKey            ORS API Key
-     * @param start             Name of start city
-     * @param end               Name of end city
+     * @param apiKey                ORS API Key
+     * @param start                 Name of start city
+     * @param end                   Name of end city
      * @param transportEmissionType Transport emission type
-     *
      * @return the calculated emission in kg
      */
     public double calculateEmission(String apiKey, String start, String end,
-                                  EmissionData transportEmissionType) {
+                                    EmissionData transportEmissionType) {
         CityData startCity = this.service.requestCityLocation(apiKey, start);
         log.debug("Start City: {}, with coordinates {}", startCity.name(), startCity.coordinates());
 
         CityData endCity = this.service.requestCityLocation(apiKey, end);
-        log.debug("End City: {}, with coordinates {}",endCity.name(),endCity.coordinates());
+        log.debug("End City: {}, with coordinates {}", endCity.name(), endCity.coordinates());
 
         double distance = this.service.requestDistance(apiKey, startCity, endCity);
         log.debug("Distance between cities: {} meters", distance);

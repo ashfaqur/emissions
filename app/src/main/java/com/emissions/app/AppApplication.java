@@ -1,10 +1,6 @@
 package com.emissions.app;
 
-import com.emissions.app.argparse.ArgParser;
-import com.emissions.app.argparse.Arguments;
-import com.emissions.app.argparse.Environment;
-import com.emissions.app.core.Emission;
-import com.emissions.app.help.Help;
+import com.emissions.app.core.EmissionAppRunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.CommandLineRunner;
@@ -13,8 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggingSystem;
 import org.springframework.boot.logging.logback.RootLogLevelConfigurator;
-
-import java.util.Objects;
 
 @SpringBootApplication
 public class AppApplication implements CommandLineRunner {
@@ -57,9 +51,8 @@ public class AppApplication implements CommandLineRunner {
         }
         this.log.debug(arguments);
 
-        String orsToken;
         try {
-            orsToken = this.environment.findOrsToken();
+            this.runner.run(args);
         } catch (IllegalArgumentException e) {
             errorLogger("Missing startup configuration.", e);
             return;

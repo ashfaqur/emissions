@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
+@Component
 public class ArgParser {
 
     private static final String START_ARG = "--start";
