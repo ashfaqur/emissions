@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class Emission {
 
-    private final Logger log = LogManager.getLogger(Emission.class);
-
     public final OrsService service;
+    private final Logger log = LogManager.getLogger(Emission.class);
 
     public Emission(OrsService orsService) {
         this.service = orsService;

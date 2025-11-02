@@ -21,6 +21,7 @@ public class OrsRestClient {
 
     private final Logger log = LogManager.getLogger(OrsRestClient.class);
 
+    // TODO: Add timeout to the rest client
     private final RestClient restClient;
 
     public OrsRestClient() {

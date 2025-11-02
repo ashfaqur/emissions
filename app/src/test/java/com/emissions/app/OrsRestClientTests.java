@@ -1,9 +1,9 @@
 package com.emissions.app;
 
-import com.emissions.app.service.CityData;
 import com.emissions.app.service.DistanceResponse;
 import com.emissions.app.service.GeocodeResponse;
 import com.emissions.app.service.OrsRestClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +14,7 @@ import org.springframework.web.client.RestClient;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,20 +37,15 @@ public class OrsRestClientTests {
     }
 
     @Test
-    void testRequestCityLocation() {
+    void testRequestCityLocation() throws Exception {
         String key = "key";
         String city = "Berlin";
         URI expectedUri = this.orsRestClient.buildGeocodeRequestFullUri(key, city);
-        String mockJsonResponse =
-        """
-            {
-                "features": [
-                    {
-                        "geometry": { "coordinates": [13.4050, 52.5200] }
-                    }
-                ]
-            }
-        """;
+        Map<String, List<Double>> geometry = Map.of("coordinates", List.of(new Double[]{13.4050, 52.5200}));
+        Map<String, Object> mockResponse = Map.of(
+                "features", List.of(Map.of("geometry", geometry)));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mockJsonResponse = objectMapper.writeValueAsString(mockResponse);
         this.mockServer.expect(requestTo(expectedUri))
                 .andExpect(method(org.springframework.http.HttpMethod.GET))
                 .andRespond(withSuccess(mockJsonResponse, MediaType.APPLICATION_JSON));
@@ -62,35 +58,27 @@ public class OrsRestClientTests {
     }
 
     @Test
-    void testRequestDistance() {
+    void testRequestDistance() throws Exception{
         String key = "key";
         List<Double> startCity =  List.of(new Double[]{11.544467, 48.152126});
         List<Double> endCity = List.of(new Double[]{13.407032, 52.524932});
+        List<List<Double>> locations = List.of(startCity, endCity);
+        Map<String, Object> bodyContent = Map.of(
+                "locations", locations, "metrics", List.of("distance"));
+        ObjectMapper objectMapper = new ObjectMapper();
+        String bodyJson = objectMapper.writeValueAsString(bodyContent);
         URI expectedUri = this.orsRestClient.buildDistanceRequestFullUri();
         double expectedDistance = 585534.81;
-        String bodyContent = String.format("""
-            {
-                "locations": [
-                    [%f, %f],
-                    [%f, %f]
-                ],
-                "metrics": ["distance"]
-            }
-        """, startCity.get(0), startCity.get(1), endCity.get(0), endCity.get(1));
-        String mockJsonResponse = String.format("""
-            {
-                "distances": [
-                    [0.0, %f],
-                    [%f, 0.0]
-                ]
-            }
-        """, expectedDistance, expectedDistance);
+        Map<String, Object> mockResponse = Map.of("distances", List.of(
+                List.of(new Double[]{0.0, expectedDistance}),
+                List.of(new Double[]{expectedDistance, 0.0})));
+        String mockJsonResponse = objectMapper.writeValueAsString(mockResponse);
 
         this.mockServer.expect(requestTo(expectedUri))
                 .andExpect(method(org.springframework.http.HttpMethod.POST))
                 .andExpect(header("Authorization", key))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(bodyContent))
+                .andExpect(content().json(bodyJson))
                 .andRespond(withSuccess(mockJsonResponse, MediaType.APPLICATION_JSON));
 
         DistanceResponse response = this.orsRestClient.requestDistance(key, startCity, endCity);
