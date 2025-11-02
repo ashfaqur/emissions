@@ -27,9 +27,9 @@ public class AppApplication implements CommandLineRunner {
 
         try {
             this.runner.run(args);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             errorLogger("Error occurred with input.", e);
-        } catch (Exception e){
+        } catch (Exception e) {
             errorLogger("Error occurred computing the emission.", e);
         }
     }

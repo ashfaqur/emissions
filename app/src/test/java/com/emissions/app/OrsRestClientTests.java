@@ -99,7 +99,7 @@ public class OrsRestClientTests {
         assertEquals(2, response.distances().size());
         assertEquals(expectedDistance, response.distances().getFirst().get(1));
     }
-    
+
     @Test
     void testGeocodeRequestUrl(){
         String key = "key";

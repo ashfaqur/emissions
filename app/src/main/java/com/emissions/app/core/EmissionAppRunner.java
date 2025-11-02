@@ -1,8 +1,8 @@
 package com.emissions.app.core;
 
+import com.emissions.app.argparse.AppEnvironment;
 import com.emissions.app.argparse.ArgParser;
 import com.emissions.app.argparse.Arguments;
-import com.emissions.app.argparse.AppEnvironment;
 import com.emissions.app.help.Help;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,16 +21,16 @@ public class EmissionAppRunner {
     private final Help help;
 
     public EmissionAppRunner(Emission emission,
-                          ArgParser argParser,
-                          AppEnvironment environment,
-                          Help help) {
+                             ArgParser argParser,
+                             AppEnvironment environment,
+                             Help help) {
         this.emission = emission;
         this.argParser = argParser;
         this.environment = environment;
         this.help = help;
     }
 
-    public double run(String... args) throws Exception{
+    public double run(String... args) throws Exception {
         Objects.requireNonNull(args);
         if (this.help.showHelp(args)) {
             this.help.displayHelp();
@@ -43,7 +43,7 @@ public class EmissionAppRunner {
         this.log.debug("Using ORS API token: {}", orsToken);
 
         double totalEmission = this.emission.calculateEmission(
-                orsToken, arguments.getStartCity(), arguments.getEndCity(),
+                orsToken, arguments.startCity(), arguments.endCity(),
                 arguments.getTransportationEmission());
         this.log.info("Your trip caused {}kg of CO2-equivalent.",
                 String.format("%.1f", totalEmission));

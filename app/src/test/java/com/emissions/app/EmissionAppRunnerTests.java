@@ -37,7 +37,7 @@ public class EmissionAppRunnerTests {
         Mockito.when(this.help.showHelp(args)).thenReturn(false);
         Mockito.when(this.argParser.parseArguments(args)).thenReturn(mockArgs);
         Mockito.when(this.env.findOrsToken()).thenReturn(key);
-        Mockito.when(this.emission.calculateEmission(key, mockArgs.getStartCity(), mockArgs.getEndCity(), mockArgs.getTransportationEmission())).thenReturn(expectedResult);
+        Mockito.when(this.emission.calculateEmission(key, mockArgs.startCity(), mockArgs.endCity(), mockArgs.getTransportationEmission())).thenReturn(expectedResult);
 
         EmissionAppRunner runner = new EmissionAppRunner(this.emission, this.argParser, this.env, this.help);
         assertEquals(expectedResult, runner.run(args));

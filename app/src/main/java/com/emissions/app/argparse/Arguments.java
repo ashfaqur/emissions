@@ -2,26 +2,7 @@ package com.emissions.app.argparse;
 
 import com.emissions.app.constants.EmissionData;
 
-public class Arguments {
-
-    private final String startCity;
-    private final String endCity;
-    private final EmissionData transportationEmissionType;
-
-    public Arguments(String startCity, String endCity,
-                     EmissionData transportationEmissionType) {
-        this.startCity = startCity;
-        this.endCity = endCity;
-        this.transportationEmissionType = transportationEmissionType;
-    }
-
-    public String getStartCity() {
-        return startCity;
-    }
-
-    public String getEndCity() {
-        return endCity;
-    }
+public record Arguments(String startCity, String endCity, EmissionData transportationEmissionType) {
 
     public EmissionData getTransportationEmission() {
         return this.transportationEmissionType;
