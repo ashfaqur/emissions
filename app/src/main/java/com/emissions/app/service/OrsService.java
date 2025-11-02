@@ -56,10 +56,13 @@ public class OrsService {
             throw new NoSuchElementException("Unable to get distance information between cities");
         }
         for (Double distance : distances) {
+            if (distance == null){
+                throw new NoSuchElementException("No distance information found between given locations.");
+            }
             if (distance > 0) {
                 return distance;
             }
         }
-        throw new NoSuchElementException("No distance information found");
+        throw new NoSuchElementException("No distance information found between given locations");
     }
 }
