@@ -1,7 +1,6 @@
 package com.emissions.app.argparse;
 
 import com.emissions.app.constants.EmissionData;
-import org.springframework.boot.logging.LogLevel;
 
 public record Arguments(String startCity, String endCity, EmissionData transportationEmissionType) {
 
