@@ -16,18 +16,27 @@ Maven handles the dependency management.
 A docker file is added for ease of CI deployment and if someone prefers to
 use docker locally instead of installing java.
 
+### Github
+
+This project is available on github repository:
+
+https://github.com/ashfaqur/emissions
+
+### QA
+
+Project has been tested on Ubuntu and Windows
 
 ### About AI support
 
 AI was not used for direct coding.
 
-Intellij Editor was used for development with no AI for autocomplete inline hints.
+Intellij IDE was used for development with no AI for autocomplete inline hints.
 
 Intellij's formatter was used for formatting the code, which auto improved some data classes to records.
 
 Google's AI Overview was unavoidable, but it helped with documentation and not for direct coding.
 
-ChatGpt's AI was used to understand how to mock the rest client calls in unit tests.
+ChatGpt's AI was used to understand how to mock the rest client calls for unit tests.
 
 ## Requirements:
 
